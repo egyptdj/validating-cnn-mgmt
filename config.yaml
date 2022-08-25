@@ -1,0 +1,41 @@
+# paths
+data_dir: 'data'
+result_dir: 'result'
+
+# subject exclusion
+exclusion: [
+  '00109', 
+  '00123', 
+  '00709',
+]
+
+# hyperparameters
+image_size: [150, 180, 150]
+num_workers: 4
+batch_size: 8
+
+# sweeps
+sweeps:
+  seed:
+    - 0 
+    - 42
+    - 1000
+    - 1234
+    - 9999
+  model:
+    - EfficientNetBN
+    - SEResNet50
+    - SEResNext50
+    - DenseNet121
+  sequence:
+    - ['FLAIR']
+    - ['T1w']
+    - ['T1wCE']
+    - ['T2w']
+    - ['FLAIR','T1wCE']
+    - ['FLAIR','T1wCE','T2w']
+    - ['FLAIR','T1wCE','T2w','T1w']
+  train_datasource:
+    - rsnamiccai
+    - snuh
+    - merged
