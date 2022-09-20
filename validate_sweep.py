@@ -50,7 +50,7 @@ def main(config_path):
     # start grid search validation
     for seed in config['sweeps']['seed']:
         for train_datasource in config['sweeps']['train_datasource']:
-            merged_subject_list = [s for s in os.listdir(os.path.join(config['data_dir'], 'train')) if not s in config['exclusion']]
+            merged_subject_list = [s for s in os.listdir(os.path.join(config['data_dir'], 'nifti_reg', 'train')) if not s in config['exclusion']]
             snuh_subject_list = [s for s in merged_subject_list if len(s)==8]
             rsnamiccai_subject_list = [s for s in merged_subject_list if len(s)==5]
             
@@ -84,31 +84,28 @@ def main(config_path):
 
                     train_dataset = tio.SubjectsDataset([
                         tio.Subject(
-                            FLAIR=tio.ScalarImage(os.path.join(config['data_dir'], 'train', subject, 'FLAIR.nii.gz')), 
-                            T1w=tio.ScalarImage(os.path.join(config['data_dir'], 'train', subject, 'T1w_reg.nii.gz')), 
-                            T1wCE=tio.ScalarImage(os.path.join(config['data_dir'], 'train', subject, 'T1wCE_reg.nii.gz')), 
-                            T2w=tio.ScalarImage(os.path.join(config['data_dir'], 'train', subject, 'T2w_reg.nii.gz')), 
-                            mask=tio.LabelMap(os.path.join(config['data_dir'], 'train', subject, 'mask.nii.gz')), 
+                            FLAIR=tio.ScalarImage(os.path.join(config['data_dir'], 'nifti_reg', 'train', subject, 'flair.nii.gz')), 
+                            T1w=tio.ScalarImage(os.path.join(config['data_dir'], 'nifti_reg', 'train', subject, 't1w.nii.gz')), 
+                            T1wCE=tio.ScalarImage(os.path.join(config['data_dir'], 'nifti_reg', 'train', subject, 't1wce.nii.gz')), 
+                            T2w=tio.ScalarImage(os.path.join(config['data_dir'], 'nifti_reg', 'train', subject, 't2w.nii.gz')), 
                             subject=subject, 
                             label=label) for subject, label in zip(train_subject_list, train_label_list)], transform=train_transform)
 
                     val_dataset = tio.SubjectsDataset([
                         tio.Subject(
-                            FLAIR=tio.ScalarImage(os.path.join(config['data_dir'], 'train', subject, 'FLAIR.nii.gz')), 
-                            T1w=tio.ScalarImage(os.path.join(config['data_dir'], 'train', subject, 'T1w_reg.nii.gz')), 
-                            T1wCE=tio.ScalarImage(os.path.join(config['data_dir'], 'train', subject, 'T1wCE_reg.nii.gz')), 
-                            T2w=tio.ScalarImage(os.path.join(config['data_dir'], 'train', subject, 'T2w_reg.nii.gz')), 
-                            mask=tio.LabelMap(os.path.join(config['data_dir'], 'train', subject, 'mask.nii.gz')), 
+                            FLAIR=tio.ScalarImage(os.path.join(config['data_dir'], 'nifti_reg', 'train', subject, 'flair.nii.gz')), 
+                            T1w=tio.ScalarImage(os.path.join(config['data_dir'], 'nifti_reg', 'train', subject, 't1w.nii.gz')), 
+                            T1wCE=tio.ScalarImage(os.path.join(config['data_dir'], 'nifti_reg', 'train', subject, 't1wce.nii.gz')), 
+                            T2w=tio.ScalarImage(os.path.join(config['data_dir'], 'nifti_reg', 'train', subject, 't2w.nii.gz')), 
                             subject=subject, 
                             label=label) for subject, label in zip(val_subject_list, val_label_list)], transform=test_transform)
 
                     test_dataset = tio.SubjectsDataset([
                         tio.Subject(
-                            FLAIR=tio.ScalarImage(os.path.join(config['data_dir'], 'train', subject, 'FLAIR.nii.gz')), 
-                            T1w=tio.ScalarImage(os.path.join(config['data_dir'], 'train', subject, 'T1w_reg.nii.gz')), 
-                            T1wCE=tio.ScalarImage(os.path.join(config['data_dir'], 'train', subject, 'T1wCE_reg.nii.gz')), 
-                            T2w=tio.ScalarImage(os.path.join(config['data_dir'], 'train', subject, 'T2w_reg.nii.gz')), 
-                            mask=tio.LabelMap(os.path.join(config['data_dir'], 'train', subject, 'mask.nii.gz')), 
+                            FLAIR=tio.ScalarImage(os.path.join(config['data_dir'], 'nifti_reg', 'train', subject, 'flair.nii.gz')), 
+                            T1w=tio.ScalarImage(os.path.join(config['data_dir'], 'nifti_reg', 'train', subject, 't1w.nii.gz')), 
+                            T1wCE=tio.ScalarImage(os.path.join(config['data_dir'], 'nifti_reg', 'train', subject, 't1wce.nii.gz')), 
+                            T2w=tio.ScalarImage(os.path.join(config['data_dir'], 'nifti_reg', 'train', subject, 't2w.nii.gz')), 
                             subject=subject, 
                             label=label) for subject, label in zip(test_subject_list, test_label_list)], transform=test_transform)
                         

@@ -36,6 +36,6 @@ sweeps:
     - ['FLAIR','T1wCE','T2w']
     - ['FLAIR','T1wCE','T2w','T1w']
   train_datasource:
-    - rsnamiccai
-    - snuh
+    # - rsnamiccai
+    # - snuh
     - merged

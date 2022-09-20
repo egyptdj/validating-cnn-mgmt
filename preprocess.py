@@ -14,7 +14,6 @@ def convert_to_nifti(source_dir, target_dir, split):
     for subject in tqdm(os.listdir(os.path.join(source_dir, split)), desc=split, ncols=60):
         for seq in SEQUENCES:
             if len(os.listdir(os.path.join(source_dir, split, subject, seq))) < 4:
-                print(subject)
                 continue
             os.makedirs(os.path.join(target_dir, split, subject), exist_ok=True)
             dicom2nifti.convert_directory(os.path.join(source_dir, split, subject, seq), os.path.join(target_dir, split, subject), compression=True)
@@ -28,16 +27,14 @@ def registration(source_dir, target_dir, split, template_sequence='T1w', type_of
         for seq in SEQUENCES:
             try:
                 moving = ants.image_read(os.path.join(source_dir, split, subject, f'{seq.lower()}.nii.gz'), reorient=True)
+                if seq==template_sequence:
+                    _t = ants.registration(fixed=fixed, moving=moving, type_of_transform=type_of_transform)
+                    fwdtransforms = _t['fwdtransforms']
+                    transformed = _t['warpedmovout']
+                else:
+                    transformed = ants.apply_transforms(fixed=fixed, moving=moving, transformlist=fwdtransforms)
             except Exception as e:
-                print(subject, seq)
                 continue
-
-            if seq==template_sequence:
-                _t = ants.registration(fixed=fixed, moving=moving, type_of_transform=type_of_transform)
-                fwdtransforms = _t['fwdtransforms']
-                transformed = _t['warpedmovout']
-            else:
-                transformed = ants.apply_transforms(fixed=fixed, moving=moving, transformlist=fwdtransforms)
 
             # save to file
             transformed.to_file(os.path.join(target_dir, split, subject, f'{seq.lower()}.nii.gz'))
@@ -54,7 +51,12 @@ if __name__ == '__main__':
     parser.add_argument('--split', type=str, default='train')
     argv = parser.parse_args()
 
+    shutil.copyfile(os.path.join(argv.source_dir, 'train_labels.csv'), os.path.join(argv.target_dir, 'train_labels.csv'))
+
+    print('>>> dicom to nifti conversion')
     convert_to_nifti(os.path.join(argv.source_dir), os.path.join(argv.target_dir, 'nifti'), argv.split)
+    
+    print('>>> registration')
     registration(os.path.join(argv.target_dir, 'nifti'), os.path.join(argv.target_dir, 'nifti_reg'), argv.split)
     
     exit(0)
